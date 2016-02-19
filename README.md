@@ -8,6 +8,8 @@
 
 An easy, native role / permission management system for Laravel.
 
+Authorization automatically adds your database permissions and roles to the `Illuminate\Auth\Access\Gate`, this means
+that you can utilize native laravel policies and methods for authorization.
 
 ## Installation
 
@@ -27,7 +29,7 @@ php artisan vendor:publish --tag="authorization"
 
 Then run `php artisan migrate`.
 
-Once you've done the migrations, create two models and insert the relevant trait:
+Once you've done the migrations, create the following two models and insert the relevant trait:
 
 The Role model:
 
@@ -102,3 +104,77 @@ class User extends Model
 You're all set!
 
 ## Usage
+
+Create a permission:
+
+```php
+$createUsers = new Permission();
+
+$createUsers->name = 'users.create';
+$createUsers->label = 'Create Users';
+
+$createUsers->save();
+```
+
+Grant the permission to a role:
+
+```php
+$administrator = new Role();
+
+$administrator->name = 'administrator';
+$administrator->label = 'Admin';
+
+$administrator->save();
+
+$administrator->grant($permission);
+```
+
+Now assign the role to the user:
+
+```php
+auth()->user()->assignRole($administrator);
+```
+
+Perform authorization like so:
+
+```php
+if (auth()->user()->hasPermission('users.create')) {
+    
+}
+```
+
+Or using Laravel's native authorization methods such as the `Gate` facade:
+
+```php
+if (Gate::allows('users.edit')) {
+    //
+}
+```
+
+Checking for multiple permissions:
+
+```php
+if (auth()->user()->hasPermission(['users.create', 'users.edit'])) {
+    // This user has both creation and edit rights.
+} else {
+    // It looks like the user doesn't have one of the specified permissions.
+}
+```
+
+Checking the users role:
+
+```php
+if (auth()->user()->hasRole('administrator')) {
+    // The current user is an administrator.
+}
+```
+
+Checking for multiple roles:
+
+```php
+if (auth()->user()->hasRole(['administrator', 'member'])) {
+    // The current user is an administrator and a member.
+} else {
+    // It looks like the user is missing a required role.
+}
+```
