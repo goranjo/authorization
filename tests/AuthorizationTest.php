@@ -227,6 +227,34 @@ class AuthorizationTest extends TestCase
         $this->assertEquals(2, $admin->revoke([$createUsers, $editUsers]));
     }
 
+    public function test_revoke_multiple_permissions_with_non_existent_permission()
+    {
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $user->assignRole($admin);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $admin->grant([$createUsers, $editUsers]);
+
+        $this->assertEquals(2, $admin->revoke([$createUsers, $editUsers, 'testing']));
+    }
+
     public function test_has_permission()
     {
         $admin = $this->createRole([

@@ -54,8 +54,8 @@ trait RolePermissionsTrait
         if (is_array($permissions)) {
             $permissions = collect($permissions);
 
-            return $permissions->each(function ($permission, $key) {
-                $this->revoke($permission);
+            return $permissions->filter(function ($permission, $key) {
+                return (bool) $this->revoke($permission);
             })->count();
         } else {
             return $this->permissions()->detach($permissions);
