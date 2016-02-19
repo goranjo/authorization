@@ -28,7 +28,7 @@ trait UserRolesTrait
     /**
      * Determine if the user has the given role.
      *
-     * @param string|Model|Collection $role
+     * @param string|Model|Collection $roles
      *
      * @return bool
      */
@@ -37,11 +37,9 @@ trait UserRolesTrait
         if (is_string($roles)) {
             return $this->roles->contains('name', $roles);
         } else if ($roles instanceof Collection) {
-            foreach ($roles as $role) {
-                if ($this->roles->contains($role)) {
-                    return true;
-                }
-            }
+            return $roles->contains(function ($key, $value) {
+                return $this->roles->contains($value);
+            });
         }
 
         return $this->roles->contains($roles);
