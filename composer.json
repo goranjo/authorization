@@ -13,9 +13,6 @@
     "orchestra/testbench": "~3.2"
   },
   "autoload": {
-    "classmap": [
-      "database"
-    ],
     "psr-4": {
       "Stevebauman\\Authorization\\": "src/"
     }
