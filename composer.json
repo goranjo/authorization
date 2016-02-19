@@ -1,7 +1,7 @@
 {
   "name": "stevebauman/authorization",
   "description": "Native Laravel Authorization.",
-  "keywords": ["framework", "laravel"],
+  "keywords": ["authorization", "laravel", "permissions", "roles", "acl"],
   "license": "MIT",
   "type": "project",
   "require": {
@@ -17,10 +17,13 @@
       "database"
     ],
     "psr-4": {
-      "App\\": "app/"
+      "Stevebauman\\Authorization\\": "src/"
     }
   },
   "autoload-dev": {
+    "psr-4": {
+      "Stevebauman\\Authorization\\Tests\\": "tests/"
+    },
     "classmap": [
       "tests/TestCase.php"
     ]
