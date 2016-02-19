@@ -38,9 +38,29 @@ trait RolePermissionsTrait
     {
         $roles = $this->inheritedRoles;
 
-        return $roles->map(function ($role) {
+        $permissions = $roles->map(function ($role) {
             return $role->permissions;
         });
+
+        $collection = new Collection();
+
+        foreach ($permissions as $key => $permission) {
+            $collection = $collection->merge($permission);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Inherits the specified roles permissions.
+     *
+     * @param Model $role
+     *
+     * @return Model
+     */
+    public function inheritRole($role)
+    {
+        return $this->inheritedRoles()->save($role);
     }
 
     /**
@@ -89,5 +109,15 @@ trait RolePermissionsTrait
         return $permissions->filter(function ($permission, $key) {
             return $this->permissions()->detach($permission) === 1;
         });
+    }
+
+    /**
+     * Revokes all permissions on the current role.
+     *
+     * @return int
+     */
+    public function revokeAll()
+    {
+        return $this->permissions()->detach();
     }
 }
