@@ -52,6 +52,22 @@ trait RolePermissionsTrait
     }
 
     /**
+     * Returns all permissions (including inherited).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function allPermissions()
+    {
+        $permissions = $this->permissions;
+
+        $inherited = $this->inheritedPermissions();
+
+        $permissions = $permissions->merge($inherited);
+
+        return $permissions;
+    }
+
+    /**
      * Inherits the specified roles permissions.
      *
      * @param Model $role
