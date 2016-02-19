@@ -21,9 +21,11 @@ trait RolePermissionsTrait
     /**
      * Grant the given permission to a role.
      *
+     * Returns the granted permission(s).
+     *
      * @param  Model|array $permissions
      *
-     * @return Model
+     * @return Model|\Illuminate\Support\Collection
      */
     public function grant($permissions)
     {
@@ -35,6 +37,28 @@ trait RolePermissionsTrait
             });
         } else {
             return $this->permissions()->save($permissions);
+        }
+    }
+
+    /**
+     * Revoke the given permission to a role.
+     *
+     * Returns the number of revoked permissions.
+     *
+     * @param  Model|array $permissions
+     *
+     * @return int
+     */
+    public function revoke($permissions)
+    {
+        if (is_array($permissions)) {
+            $permissions = collect($permissions);
+
+            return $permissions->each(function ($permission, $key) {
+                $this->revoke($permission);
+            })->count();
+        } else {
+            return $this->permissions()->detach($permissions);
         }
     }
 }
