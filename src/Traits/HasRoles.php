@@ -21,21 +21,23 @@ trait HasRoles
     /**
      * Assign the given role to the user.
      *
-     * @param  string $role
+     * @param string|Model $role
      *
      * @return Model
      */
     public function assignRole($role)
     {
-        return $this->roles()->save(
-            $this->roles()->getRelated()->whereName($role)->firstOrFail()
-        );
+        if (!$role instanceof Model) {
+            $role = $this->roles()->getRelated()->whereName($role)->firstOrFail();
+        }
+
+        return $this->roles()->save($role);
     }
 
     /**
      * Determine if the user has the given role.
      *
-     * @param  mixed $role
+     * @param mixed $role
      *
      * @return bool
      */
@@ -45,18 +47,24 @@ trait HasRoles
             return $this->roles->contains('name', $role);
         }
 
-        return !! $role->intersect($this->roles)->count();
+        return $this->roles->contains($role);
     }
 
     /**
      * Determine if the user may perform the given permission.
      *
-     * @param  Model $permission
+     * @param string|Model $permission
      *
      * @return bool
      */
-    public function hasPermission(Model $permission)
+    public function hasPermission($permission)
     {
+        if (!$permission instanceof Model) {
+            $model = config('authorization.permission');
+
+            $permission = (new $model)->whereName($permission)->firstOrFail();
+        }
+
         if (property_exists($permission, 'roles')) {
             return $this->hasRole($permission->roles);
         }
