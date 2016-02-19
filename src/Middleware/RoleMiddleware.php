@@ -19,6 +19,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $roles)
     {
+        $args = func_get_args();
+
+        if ($args > 3) {
+            // If we've been given more than one permission, we
+            // need to retrieve all of them from the method.
+            $roles = array_slice($args, 2);
+        }
+
         $roles = collect($roles);
 
         if (! $request->user()->hasRole($roles)) {

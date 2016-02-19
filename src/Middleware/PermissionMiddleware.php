@@ -19,6 +19,14 @@ class PermissionMiddleware
      */
     public function handle(Request $request, Closure $next, $permissions)
     {
+        $args = func_get_args();
+
+        if ($args > 3) {
+            // If we've been given more than one permission, we
+            // need to retrieve all of them from the method.
+            $permissions = array_slice($args, 2);
+        }
+
         $permissions = collect($permissions);
 
         if (! $request->user()->hasPermission($permissions)) {
