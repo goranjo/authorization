@@ -48,24 +48,49 @@ trait UserRolesTrait
     /**
      * Determine if the user may perform the given permission.
      *
-     * @param string|Model $permission
+     * @param string|array|Model $permission
      *
      * @return bool
      */
     public function hasPermission($permission)
     {
-        if (!$permission instanceof Model) {
-            // If we weren't given a permission model, we'll try to find it by name.
-            $model = config('authorization.permission');
-
-            $permission = (new $model)->whereName($permission)->first();
+        if (!is_array($permission)) {
+            $permission = [$permission];
         }
 
-        // Check if we have a model instance before asking for the permissions roles.
-        if ($permission instanceof Model) {
-            return $this->hasRole($permission->roles);
-        }
+        // Collect the permissions.
+        $permission = collect($permission);
 
-        return false;
+        // Get a before count of all the inserted permissions.
+        $count = $permission->count();
+
+        // Filter through each permission to see if the user has the permission and
+        // return true if the filtered collection count is the same.
+        return $permission->filter(function ($permission, $key) {
+            if (is_string($permission)) {
+                // If we weren't given a permission model, we'll try to find it by name.
+                $model = config('authorization.permission');
+
+                $permission = (new $model)->whereName($permission)->first();
+            }
+
+            if ($permission instanceof Model) {
+                return $this->hasRole($permission->roles);
+            }
+
+            return false;
+        })->count() === $count;
+    }
+
+    /**
+     * Returns true / false if the user does not have the specified permission.
+     *
+     * @param $permission
+     *
+     * @return bool
+     */
+    public function doesNotHavePermission($permission)
+    {
+        return ! $this->hasPermission($permission);
     }
 }

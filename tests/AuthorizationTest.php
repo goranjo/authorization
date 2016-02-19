@@ -305,4 +305,82 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($user->hasPermission('users.create'));
         $this->assertFalse($user->hasPermission('non-existent'));
     }
+
+    public function test_has_multiple_permissions()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $admin->grant([$createUsers, $editUsers]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+
+        $this->assertTrue($user->hasPermission([$createUsers, $editUsers]));
+    }
+
+    public function test_does_not_have_permission()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $admin->grant($createUsers);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $this->assertTrue($user->doesNotHavePermission($createUsers));
+        $this->assertFalse($user->hasPermission($createUsers));
+    }
+
+    public function test_does_not_have_permission_multiple()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $admin->grant($createUsers);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+
+        $this->assertTrue($user->doesNotHavePermission([$createUsers, $editUsers]));
+    }
 }
