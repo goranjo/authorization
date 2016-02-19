@@ -12,20 +12,41 @@ class CreateAuthorizationTables extends Migration
      */
     public function up()
     {
+        // The roles table.
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name'); // The name field is mandatory.
             $table->string('label')->nullable();
             $table->timestamps();
         });
 
+        // The inheritable roles table.
+        Schema::create('roles_inherit', function (Blueprint $table) {
+            $table->integer('role_id')->unsigned();
+            $table->integer('parent_id')->unsigned();
+
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('roles')
+                ->onDelete('cascade');
+
+            $table->foreign('parent_id')
+                ->references('id')
+                ->on('roles')
+                ->onDelete('cascade');
+
+            $table->primary(['role_id', 'parent_id']);
+        });
+
+        // The permissions table.
         Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name'); // The name field is mandatory.
             $table->string('label')->nullable();
             $table->timestamps();
         });
 
+        // The role permissions pivot table.
         Schema::create('permission_role', function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
             $table->integer('role_id')->unsigned();
@@ -39,9 +60,11 @@ class CreateAuthorizationTables extends Migration
                 ->references('id')
                 ->on('roles')
                 ->onDelete('cascade');
+
             $table->primary(['permission_id', 'role_id']);
         });
 
+        // The role user pivot table.
         Schema::create('role_user', function (Blueprint $table) {
             $table->integer('role_id')->unsigned();
             $table->integer('user_id')->unsigned();

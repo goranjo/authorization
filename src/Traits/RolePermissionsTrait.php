@@ -20,6 +20,30 @@ trait RolePermissionsTrait
     }
 
     /**
+     * A role may inherit various other roles.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function inheritedRoles()
+    {
+        return $this->belongsToMany(self::class, 'roles_inherit', 'role_id', 'parent_id');
+    }
+
+    /**
+     * Returns the current roles inherited permissions.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function inheritedPermissions()
+    {
+        $roles = $this->inheritedRoles;
+
+        return $roles->map(function ($role) {
+            return $role->permissions;
+        });
+    }
+
+    /**
      * Grant the given permission to a role.
      *
      * Returns the granted permission(s).
