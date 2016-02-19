@@ -2,6 +2,7 @@
 
 namespace Stevebauman\Authorization\Tests;
 
+use Illuminate\Support\Collection;
 use Stevebauman\Authorization\Tests\Stubs\Permission;
 use Stevebauman\Authorization\Tests\Stubs\Role;
 use Stevebauman\Authorization\Tests\Stubs\User;
@@ -120,6 +121,59 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($user->hasRole($admin));
         $this->assertTrue($user->hasRole('administrator'));
         $this->assertFalse($user->hasRole('non-existent'));
+    }
+
+    public function test_grant_permission()
+    {
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $user->assignRole($admin);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $this->assertInstanceOf(Permission::class, $admin->grant($createUsers));
+        $this->assertTrue($user->hasPermission($createUsers));
+    }
+
+    public function test_grant_multiple_permissions()
+    {
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $user->assignRole($admin);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $granted = $admin->grant([$createUsers, $editUsers]);
+
+        $this->assertInstanceOf(Collection::class, $granted);
+        $this->assertCount(2, $granted);
+        $this->assertTrue($user->hasPermission($createUsers));
+        $this->assertTrue($user->hasPermission($editUsers));
     }
 
     public function test_has_permission()
