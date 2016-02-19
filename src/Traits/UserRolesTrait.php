@@ -37,8 +37,8 @@ trait UserRolesTrait
         if (is_string($roles)) {
             return $this->roles->contains('name', $roles);
         } else if ($roles instanceof Collection) {
-            return $roles->contains(function ($key, $value) {
-                return $this->roles->contains($value);
+            return $roles->contains(function ($key, $role) {
+                return $this->roles->contains($role);
             });
         }
 
