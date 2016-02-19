@@ -121,4 +121,29 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($user->hasRole('administrator'));
         $this->assertFalse($user->hasRole('non-existent'));
     }
+
+    public function test_has_permission()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $permission = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+
+        $admin->grant($permission);
+
+        $this->assertTrue($user->hasPermission($permission));
+        $this->assertTrue($user->hasPermission('users.create'));
+        $this->assertFalse($user->hasPermission('non-existent'));
+    }
 }

@@ -3,20 +3,11 @@
 namespace Stevebauman\Authorization\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
-trait HasRoles
+trait UserRolesTrait
 {
-    /**
-     * A user may have multiple roles.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function roles()
-    {
-        $model = config('authorization.role');
-
-        return $this->belongsToMany($model);
-    }
+    use HasRolesTrait;
 
     /**
      * Assign the given role to the user.
@@ -37,17 +28,23 @@ trait HasRoles
     /**
      * Determine if the user has the given role.
      *
-     * @param mixed $role
+     * @param string|Model|Collection $role
      *
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($roles)
     {
-        if (is_string($role)) {
-            return $this->roles->contains('name', $role);
+        if (is_string($roles)) {
+            return $this->roles->contains('name', $roles);
+        } else if ($roles instanceof Collection) {
+            foreach ($roles as $role) {
+                if ($this->roles->contains($role)) {
+                    return true;
+                }
+            }
         }
 
-        return $this->roles->contains($role);
+        return $this->roles->contains($roles);
     }
 
     /**
@@ -60,12 +57,14 @@ trait HasRoles
     public function hasPermission($permission)
     {
         if (!$permission instanceof Model) {
+            // If we weren't given a permission model, we'll try to find it by name.
             $model = config('authorization.permission');
 
-            $permission = (new $model)->whereName($permission)->firstOrFail();
+            $permission = (new $model)->whereName($permission)->first();
         }
 
-        if (property_exists($permission, 'roles')) {
+        // Check if we have a model instance before asking for the permissions roles.
+        if ($permission instanceof Model) {
             return $this->hasRole($permission->roles);
         }
 
