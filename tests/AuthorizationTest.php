@@ -56,6 +56,8 @@ class AuthorizationTest extends TestCase
         ]);
 
         $user->assignRole('administrator');
+
+        $this->assertCount(1, $user->roles);
     }
 
     public function test_assign_multiple_roles()
@@ -75,5 +77,48 @@ class AuthorizationTest extends TestCase
         ]);
 
         $user->assignRole('administrator');
+        $user->assignRole('member');
+
+        $this->assertCount(2, $user->roles);
+    }
+
+    public function test_assign_roles_with_model()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $member = $this->createRole([
+            'name' => 'member',
+            'label' => 'Member',
+        ]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+        $user->assignRole($member);
+
+        $this->assertCount(2, $user->roles);
+    }
+
+    public function test_has_role()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+
+        $this->assertTrue($user->hasRole($admin));
+        $this->assertTrue($user->hasRole('administrator'));
+        $this->assertFalse($user->hasRole('non-existent'));
     }
 }
