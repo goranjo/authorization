@@ -21,12 +21,20 @@ trait RolePermissionsTrait
     /**
      * Grant the given permission to a role.
      *
-     * @param  Model $permission
+     * @param  Model|array $permissions
      *
      * @return Model
      */
-    public function grant(Model $permission)
+    public function grant($permissions)
     {
-        return $this->permissions()->save($permission);
+        if (is_array($permissions)) {
+            $permissions = collect($permissions);
+
+            return $permissions->each(function ($permission, $key) {
+                $this->permissions()->save($permission);
+            });
+        } else {
+            return $this->permissions()->save($permissions);
+        }
     }
 }
