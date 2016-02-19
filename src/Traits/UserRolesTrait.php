@@ -2,8 +2,8 @@
 
 namespace Stevebauman\Authorization\Traits;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
 
 trait UserRolesTrait
 {
@@ -75,7 +75,7 @@ trait UserRolesTrait
             }
 
             if ($permission instanceof Model) {
-                return $this->hasRole($permission->roles);
+                return $this->hasRole($permission->allRoles());
             }
 
             return false;
