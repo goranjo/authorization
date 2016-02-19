@@ -3,6 +3,7 @@
 namespace Stevebauman\Authorization\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait RolePermissionsTrait
 {
@@ -25,40 +26,44 @@ trait RolePermissionsTrait
      *
      * @param  Model|array $permissions
      *
-     * @return Model|\Illuminate\Support\Collection
+     * @return Collection
      */
     public function grant($permissions)
     {
-        if (is_array($permissions)) {
-            $permissions = collect($permissions);
-
-            return $permissions->each(function ($permission, $key) {
-                $this->permissions()->save($permission);
-            });
-        } else {
-            return $this->permissions()->save($permissions);
+        if (!is_array($permissions)) {
+            $permissions = [$permissions];
         }
+
+        $permissions = collect($permissions);
+
+        return $permissions->filter(function ($permission, $key) {
+            if ($permission instanceof Model) {
+                return $this->permissions()->save($permission) instanceof Model;
+            }
+
+            return false;
+        });
     }
 
     /**
      * Revoke the given permission to a role.
      *
-     * Returns the number of revoked permissions.
+     * Returns a collection of revoked permissions.
      *
      * @param  Model|array $permissions
      *
-     * @return int
+     * @return Collection
      */
     public function revoke($permissions)
     {
-        if (is_array($permissions)) {
-            $permissions = collect($permissions);
-
-            return $permissions->filter(function ($permission, $key) {
-                return (bool) $this->revoke($permission);
-            })->count();
-        } else {
-            return $this->permissions()->detach($permissions);
+        if (!is_array($permissions)) {
+            $permissions = [$permissions];
         }
+
+        $permissions = collect($permissions);
+
+        return $permissions->filter(function ($permission, $key) {
+            return $this->permissions()->detach($permission) === 1;
+        });
     }
 }
