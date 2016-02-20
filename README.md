@@ -21,6 +21,12 @@ Insert Authorization in your `composer.json` file:
 
 Then run `composer update`.
 
+Insert the service provider in your `config/app.php` file:
+
+```php
+Stevebauman\Authorization\AuthorizationServiceProvider::class,
+```
+
 Once that's complete, publish the migrations using:
 
 ```php
