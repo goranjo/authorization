@@ -70,8 +70,8 @@ trait UserRolesTrait
      */
     public function hasRoles($roles)
     {
-        if (! is_array($roles)) {
-            $roles = [$roles];
+        if (!$roles instanceof Collection) {
+            $roles = collect($roles);
         }
 
         $roles = collect($roles);
@@ -92,8 +92,8 @@ trait UserRolesTrait
      */
     public function hasAnyRoles($roles)
     {
-        if (! is_array($roles)) {
-            $roles = [$roles];
+        if (!$roles instanceof Collection) {
+            $roles = collect($roles);
         }
 
         $roles = collect($roles);
