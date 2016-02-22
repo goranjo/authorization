@@ -331,7 +331,7 @@ class AuthorizationTest extends TestCase
 
         $user->assignRole($admin);
 
-        $this->assertTrue($user->hasPermission([$createUsers, $editUsers]));
+        $this->assertTrue($user->hasPermissions([$createUsers, $editUsers]));
     }
 
     public function test_does_not_have_permission()
@@ -381,6 +381,40 @@ class AuthorizationTest extends TestCase
 
         $user->assignRole($admin);
 
-        $this->assertTrue($user->doesNotHavePermission([$createUsers, $editUsers]));
+        $this->assertTrue($user->doesNotHavePermissions([$createUsers, $editUsers]));
+    }
+
+    public function test_has_any_permissions()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $nonGrantedPermission = $this->createPermission([
+            'name' => 'other',
+            'label' => 'Other Permission',
+        ]);
+
+        $admin->grant([$createUsers, $editUsers]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+
+        $this->assertTrue($user->hasAnyPermissions([$editUsers, $nonGrantedPermission]));
+        $this->assertFalse($user->hasAnyPermissions([$nonGrantedPermission]));
     }
 }

@@ -20,24 +20,6 @@ class CreateAuthorizationTables extends Migration
             $table->timestamps();
         });
 
-        // The inheritable roles table.
-        Schema::create('roles_inherit', function (Blueprint $table) {
-            $table->integer('role_id')->unsigned();
-            $table->integer('parent_id')->unsigned();
-
-            $table->foreign('role_id')
-                ->references('id')
-                ->on('roles')
-                ->onDelete('cascade');
-
-            $table->foreign('parent_id')
-                ->references('id')
-                ->on('roles')
-                ->onDelete('cascade');
-
-            $table->primary(['role_id', 'parent_id']);
-        });
-
         // The permissions table.
         Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');

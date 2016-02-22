@@ -13,6 +13,6 @@ trait HasRolesTrait
     {
         $model = config('authorization.role');
 
-        return $this->belongsToMany($model)->with('inheritedRoles');
+        return $this->belongsToMany($model);
     }
 }

@@ -28,69 +28,123 @@ trait UserRolesTrait
     /**
      * Determine if the user has the given role.
      *
-     * @param string|Model|Collection $roles
+     * @param string|Model $role
      *
      * @return bool
      */
-    public function hasRole($roles)
+    public function hasRole($role)
     {
-        if (is_string($roles)) {
-            return $this->roles->contains('name', $roles);
-        } else if ($roles instanceof Collection) {
-            return $roles->contains(function ($key, $role) {
-                return $this->roles->contains($role);
-            });
+        if ($role instanceof Model) {
+            return $this->roles->contains($role);
         }
 
-        return $this->roles->contains($roles);
+        return $this->roles->contains('name', $role);
     }
 
     /**
      * Determine if the user may perform the given permission.
      *
-     * @param string|array|Model $permission
+     * @param string|Model $permission
      *
      * @return bool
      */
     public function hasPermission($permission)
     {
-        if (!is_array($permission)) {
-            $permission = [$permission];
+        if (is_string($permission)) {
+            // If we weren't given a permission model, we'll try to find it by name.
+            $model = config('authorization.permission');
+
+            $permission = (new $model)->whereName($permission)->first();
         }
 
-        // Collect the permissions.
-        $permission = collect($permission);
+        if ($permission instanceof Model) {
+            $roles = $permission->roles;
 
-        // Get a before count of all the inserted permissions.
-        $count = $permission->count();
-
-        // Filter through each permission to see if the user has the permission and
-        // return true if the filtered collection count is the same.
-        return $permission->filter(function ($permission, $key) {
-            if (is_string($permission)) {
-                // If we weren't given a permission model, we'll try to find it by name.
-                $model = config('authorization.permission');
-
-                $permission = (new $model)->whereName($permission)->first();
+            foreach ($roles as $role) {
+                if ($this->hasRole($role)) {
+                    return true;
+                }
             }
+        }
 
-            if ($permission instanceof Model) {
-                return $this->hasRole($permission->allRoles());
-            }
+        return false;
+    }
 
-            return false;
+    /**
+     * Returns true / false if the current user
+     * has the specified permissions.
+     *
+     * @param array|Collection $permissions
+     *
+     * @return bool
+     */
+    public function hasPermissions($permissions)
+    {
+        if (!$permissions instanceof Collection) {
+            $permissions = collect($permissions);
+        }
+
+        $count = $permissions->count();
+
+        return $permissions->filter(function ($permission) {
+            return $this->hasPermission($permission);
         })->count() === $count;
+    }
+
+    /**
+     * Returns true / false if the current user has
+     * any of the specified permissions.
+     *
+     * @param array|Collection $permissions
+     *
+     * @return bool
+     */
+    public function hasAnyPermissions($permissions)
+    {
+        if (!$permissions instanceof Collection) {
+            $permissions = collect($permissions);
+        }
+
+        return $permissions->filter(function ($permission) {
+            return $this->hasPermission($permission);
+        })->count() > 0;
     }
 
     /**
      * Returns true / false if the user does not have the specified permission.
      *
-     * @param $permission
+     * @param string|Model $permission
      *
      * @return bool
      */
     public function doesNotHavePermission($permission)
     {
         return ! $this->hasPermission($permission);
+    }
+
+    /**
+     * Returns true / false if all of the specified
+     * permissions do not exist on the current user.
+     *
+     * @param array|Collection $permissions
+     *
+     * @return bool
+     */
+    public function doesNotHavePermissions($permissions)
+    {
+        return ! $this->hasPermissions($permissions);
+    }
+
+    /**
+     * Returns true / false if any of the specified
+     * permissions do not exist on the current user.
+     *
+     * @param array|Collection $permissions
+     *
+     * @return bool
+     */
+    public function doesNotHaveAnyPermissions($permissions)
+    {
+        return ! $this->hasAnyPermissions($permissions);
     }
 }
