@@ -417,4 +417,85 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($user->hasAnyPermissions([$editUsers, $nonGrantedPermission]));
         $this->assertFalse($user->hasAnyPermissions([$nonGrantedPermission]));
     }
+
+    public function test_role_has_permission()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $admin->grant($createUsers);
+
+        $this->assertTrue($admin->hasPermission('users.create'));
+        $this->assertTrue($admin->hasPermission($createUsers));
+        $this->assertFalse($admin->hasPermission('non-existent'));
+        $this->assertFalse($admin->hasPermission($editUsers));
+    }
+
+    public function test_role_has_permissions()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $deleteUsers = $this->createPermission([
+            'name' => 'users.destroy',
+            'label' => 'Delete Users',
+        ]);
+
+        $admin->grant([$createUsers, $editUsers]);
+
+        $this->assertTrue($admin->hasPermissions([$createUsers, $editUsers]));
+        $this->assertFalse($admin->hasPermissions([$createUsers, $editUsers, $deleteUsers]));
+    }
+
+    public function test_role_has_any_permissions()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $createUsers = $this->createPermission([
+            'name' => 'users.create',
+            'label' => 'Create Users',
+        ]);
+
+        $editUsers = $this->createPermission([
+            'name' => 'users.edit',
+            'label' => 'Edit Users',
+        ]);
+
+        $deleteUsers = $this->createPermission([
+            'name' => 'users.destroy',
+            'label' => 'Delete Users',
+        ]);
+
+        $admin->grant([$createUsers, $editUsers]);
+
+        $this->assertTrue($admin->hasAnyPermissions([$createUsers, $editUsers, 'non-existent']));
+        $this->assertFalse($admin->hasAnyPermissions(['non-existent', 'unknown']));
+    }
 }
