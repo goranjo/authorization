@@ -19,13 +19,13 @@ class AuthorizationServiceProvider extends ServiceProvider
         $config = __DIR__.'/Config/config.php';
 
         // The migrations path.
-        $migrations = __DIR__.'Migrations/';
+        $migrations = __DIR__.'/Migrations/';
 
         // The authorization tag.
         $tag = 'authorization';
 
         $this->publishes([
-            $migrations => database_path(),
+            $migrations => database_path('migrations'),
         ], $tag);
 
         // Set the configuration to publishable.
