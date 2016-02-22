@@ -496,6 +496,89 @@ class AuthorizationTest extends TestCase
         $admin->grant([$createUsers, $editUsers]);
 
         $this->assertTrue($admin->hasAnyPermissions([$createUsers, $editUsers, 'non-existent']));
-        $this->assertFalse($admin->hasAnyPermissions(['non-existent', 'unknown']));
+        $this->assertFalse($admin->hasAnyPermissions(['non-existent', 'unknown', $deleteUsers]));
+    }
+
+    public function test_user_has_role()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $member = $this->createRole([
+            'name' => 'member',
+            'label' => 'Member',
+        ]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+
+        $this->assertTrue($user->hasRole('administrator'));
+        $this->assertTrue($user->hasRole($admin));
+        $this->assertFalse($user->hasRole('non-existent'));
+        $this->assertFalse($user->hasRole($member));
+    }
+
+    public function test_user_has_roles()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $member = $this->createRole([
+            'name' => 'member',
+            'label' => 'Member',
+        ]);
+
+        $guest = $this->createRole([
+            'name' => 'guest',
+            'label' => 'Guest',
+        ]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+        $user->assignRole($member);
+
+        $this->assertTrue($user->hasRoles(['administrator', 'member']));
+        $this->assertTrue($user->hasRoles([$admin, $member]));
+        $this->assertFalse($user->hasRoles(['non-existent', $admin]));
+        $this->assertFalse($user->hasRoles([$admin, $member, $guest]));
+    }
+
+    public function test_user_has_any_roles()
+    {
+        $admin = $this->createRole([
+            'name' => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $member = $this->createRole([
+            'name' => 'member',
+            'label' => 'Member',
+        ]);
+
+        $guest = $this->createRole([
+            'name' => 'guest',
+            'label' => 'Guest',
+        ]);
+
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $user->assignRole($admin);
+        $user->assignRole($member);
+
+        $this->assertTrue($user->hasAnyRoles(['administrator', 'member', 'non-existent']));
+        $this->assertTrue($user->hasAnyRoles([$admin, $member, 'non-existent']));
+        $this->assertTrue($user->hasAnyRoles([$admin, $member, $guest]));
     }
 }

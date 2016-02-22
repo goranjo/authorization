@@ -46,6 +46,48 @@ trait UserRolesTrait
     }
 
     /**
+     * Returns true / false if the current user has the specified roles.
+     *
+     * @param array $roles
+     *
+     * @return bool
+     */
+    public function hasRoles($roles)
+    {
+        if (! is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        $roles = collect($roles);
+
+        $count = $roles->count();
+
+        return $roles->filter(function ($role) {
+            return $this->hasRole($role);
+        })->count() === $count;
+    }
+
+    /**
+     * Returns true / false if the current user has any of the specified roles.
+     *
+     * @param array $roles
+     *
+     * @return bool
+     */
+    public function hasAnyRoles($roles)
+    {
+        if (! is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        $roles = collect($roles);
+
+        return $roles->filter(function ($role) {
+            return $this->hasRole($role);
+        })->count() > 0;
+    }
+
+    /**
      * Determine if the user may perform the given permission.
      *
      * @param string|Model $permission
