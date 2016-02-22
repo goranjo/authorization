@@ -234,3 +234,64 @@ if (auth()->user()->hasAnyRoles(['administrator', 'member', 'guest'])) {
     // It looks like the user doesn't have any of these roles.
 }
 ```
+
+### Middleware
+
+Authorization includes two useful middleware classes you can utilize for your routes.
+
+Insert them into your `app/Http/Kernel.php`:
+
+```php
+/**
+ * The application's route middleware.
+ *
+ * These middleware may be assigned to groups or used individually.
+ *
+ * @var array
+ */
+protected $routeMiddleware = [
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    'permission' => \Stevebauman\Authorization\Middleware\PermissionMiddleware::class, // The permission middleware
+    'role' => \Stevebauman\Authorization\Middleware\RoleMiddleware::class, // The role middleware
+];
+```
+
+Once you've done that, you can start using them.
+
+> **Note**: When a user does not meet the requirments using the middleware,
+> an `Illuminate\Contracts\Validation\UnauthorizedException` is thrown.
+
+To guard a route to only allow specific permissions:
+
+```php
+Route::get('users', [
+    'uses' => 'UsersController@index',
+    'middleware' => 'permission:users.index',
+]);
+
+// Multiple permissions:
+
+Route::get('users', [
+    'uses' => 'UsersController@index',
+    'middleware' => 'permission:users.index,users.create', // Users must have index **and** create rights to access this route.
+]);
+```
+
+To guard a route to allow a specific role:
+
+```php
+Route::get('users', [
+    'uses' => 'UsersController@index',
+    'middleware' => 'role:administrator',
+]);
+
+// Multiple roles:
+
+Route::get('users', [
+    'uses' => 'UsersController@index',
+    'middleware' => 'role:administrator,member', // Users must be an administrator **and** a member to access this route.
+]);
+```
