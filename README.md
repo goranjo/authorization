@@ -168,6 +168,23 @@ public function index()
 }
 ```
 
+Or by using Laravel's native `can` method on the user:
+
+```php
+if (auth()->user()->can('users.index')) {
+    // This user can access the index.
+}
+```
+
+
+Or by using Laravel's native `@can` directive in your views:
+
+```php
+@can('users.index')
+    <!-- This user can access the index. -->
+@endcan
+```
+
 Checking for multiple permissions:
 
 ```php
