@@ -261,7 +261,7 @@ protected $routeMiddleware = [
 
 Once you've done that, you can start using them.
 
-> **Note**: When a user does not meet the requirments using the middleware,
+> **Note**: When a user does not meet the requirements using the middleware,
 > an `Illuminate\Contracts\Validation\UnauthorizedException` is thrown.
 
 To guard a route to only allow specific permissions:
