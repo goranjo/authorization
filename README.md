@@ -132,7 +132,7 @@ $administrator->label = 'Admin';
 
 $administrator->save();
 
-$administrator->grant($permission);
+$administrator->grant($createUsers);
 ```
 
 Now assign the role to the user:
@@ -157,30 +157,63 @@ if (Gate::allows('users.edit')) {
 }
 ```
 
+Or by using Laravel's native `AuthorizesRequests` trait methods in your controllers:
+
+```php
+public function index()
+{
+    $this->authorize('users.index');
+    
+    // User can access index.
+}
+```
+
 Checking for multiple permissions:
 
 ```php
-if (auth()->user()->hasPermission(['users.create', 'users.edit'])) {
+if (auth()->user()->hasPermissions(['users.create', 'users.edit'])) {
     // This user has both creation and edit rights.
 } else {
     // It looks like the user doesn't have one of the specified permissions.
 }
 ```
 
-Checking the users role:
+Checking if the user has any permissions:
 
 ```php
-if (auth()->user()->hasRole('administrator')) {
-    // The current user is an administrator.
+if (auth()->user()->hasAnyPermissions(['users.create', 'users.edit', 'users.destroy'])) {
+    // This user either has create, edit or destroy permissions.
+} else {
+    // It looks like the user doesn't have any of the specified permissions.
 }
 ```
 
-Checking for multiple roles:
+Checking if the user has a role:
 
 ```php
-if (auth()->user()->hasRole(['administrator', 'member'])) {
-    // The current user is an administrator and a member.
+if (auth()->user()->hasRole('administrator')) {
+    // This user is an administrator.
 } else {
-    // It looks like the user is missing a required role.
+    // It looks like the user isn't an administrator.
+}
+```
+
+Checking if the user has specified roles:
+
+```php
+if (auth()->user()->hasRoles(['administrator', 'member'])) {
+    // This user is an administrator and a member.
+} else {
+    // It looks like the user isn't an administrator or member.
+}
+```
+
+Checking if the user has any specified roles:
+
+```php
+if (auth()->user()->hasAnyRoles(['administrator', 'member', 'guest'])) {
+    // This user is either an administrator, member or guest.
+} else {
+    // It looks like the user doesn't have any of these roles.
 }
 ```
