@@ -34,11 +34,15 @@ trait UserRolesTrait
      */
     public function hasRole($role)
     {
+        if (is_string($role)) {
+            $role = $this->roles()->whereName($role)->first();
+        }
+
         if ($role instanceof Model) {
             return $this->roles->contains($role);
         }
 
-        return $this->roles->contains('name', $role);
+        return false;
     }
 
     /**
