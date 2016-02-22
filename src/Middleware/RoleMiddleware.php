@@ -17,7 +17,7 @@ class RoleMiddleware
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $roles)
+    public function handle(Request $request, Closure $next, $roles = null)
     {
         $args = func_get_args();
 

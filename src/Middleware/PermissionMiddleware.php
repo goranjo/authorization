@@ -17,7 +17,7 @@ class PermissionMiddleware
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $permissions)
+    public function handle(Request $request, Closure $next, $permissions = null)
     {
         $args = func_get_args();
 
