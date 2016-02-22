@@ -26,6 +26,22 @@ trait UserRolesTrait
     }
 
     /**
+     * Removes the specified role from the user.
+     *
+     * @param string|Model $role
+     *
+     * @return Model
+     */
+    public function removeRole($role)
+    {
+        if (!$role instanceof Model) {
+            $role = $this->roles()->getRelated()->whereName($role)->firstOrFail();
+        }
+
+        return $this->roles()->detach($role);
+    }
+
+    /**
      * Determine if the user has the given role.
      *
      * @param string|Model $role
