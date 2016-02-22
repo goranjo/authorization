@@ -24,12 +24,9 @@ class AuthorizationServiceProvider extends ServiceProvider
         // The authorization tag.
         $tag = 'authorization';
 
+        // Set the configuration and migrations to publishable.
         $this->publishes([
             $migrations => database_path('migrations'),
-        ], $tag);
-
-        // Set the configuration to publishable.
-        $this->publishes([
             $config => config_path('authorization.php'),
         ], $tag);
 
