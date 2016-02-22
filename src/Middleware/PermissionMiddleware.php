@@ -29,7 +29,7 @@ class PermissionMiddleware
 
         $permissions = collect($permissions);
 
-        if (! $request->user()->hasPermission($permissions)) {
+        if (! $request->user()->hasPermissions($permissions)) {
             throw new UnauthorizedException();
         }
 
