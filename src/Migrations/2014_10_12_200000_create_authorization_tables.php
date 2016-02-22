@@ -74,7 +74,6 @@ class CreateAuthorizationTables extends Migration
         Schema::drop('role_user');
         Schema::drop('permission_role');
         Schema::drop('permissions');
-        Schema::drop('roles_inherit');
         Schema::drop('roles');
     }
 }
