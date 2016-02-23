@@ -88,19 +88,21 @@ trait RolePermissionsTrait
      *
      * @param  Model|array $permissions
      *
-     * @return Collection
+     * @return Model|Collection
      */
     public function grant($permissions)
     {
-        if (!is_array($permissions)) {
-            $permissions = [$permissions];
+        if ($permissions instanceof Model) {
+            if ($this->permissions()->save($permissions) instanceof Model) {
+                return $permissions;
+            }
+        } elseif (is_array($permissions)) {
+            $permissions = collect($permissions);
         }
 
-        $permissions = collect($permissions);
-
-        return $permissions->filter(function ($permission, $key) {
+        return $permissions->filter(function ($permission) {
             if ($permission instanceof Model) {
-                return $this->permissions()->save($permission) instanceof Model;
+                return $this->grant($permission);
             }
 
             return false;
@@ -114,18 +116,24 @@ trait RolePermissionsTrait
      *
      * @param  Model|array $permissions
      *
-     * @return Collection
+     * @return Model|Collection
      */
     public function revoke($permissions)
     {
-        if (!is_array($permissions)) {
-            $permissions = [$permissions];
+        if ($permissions instanceof Model) {
+            if ($this->permissions()->detach($permissions) === 1) {
+                return $permissions;
+            }
+        } elseif (is_array($permissions)) {
+            $permissions = collect($permissions);
         }
 
-        $permissions = collect($permissions);
+        return $permissions->filter(function ($permission) {
+            if ($permission instanceof Model) {
+                return $this->revoke($permission);
+            }
 
-        return $permissions->filter(function ($permission, $key) {
-            return $this->permissions()->detach($permission) === 1;
+            return false;
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace Stevebauman\Authorization\Tests;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Stevebauman\Authorization\Tests\Stubs\Permission;
 use Stevebauman\Authorization\Tests\Stubs\Role;
@@ -141,7 +142,7 @@ class AuthorizationTest extends TestCase
             'label' => 'Create Users',
         ]);
 
-        $this->assertEquals(1, $admin->grant($createUsers)->count());
+        $this->assertInstanceOf(Permission::class, $admin->grant($createUsers));
         $this->assertTrue($user->hasPermission($createUsers));
     }
 
@@ -222,7 +223,7 @@ class AuthorizationTest extends TestCase
 
         $admin->grant($createUsers);
 
-        $this->assertEquals(1, $admin->revoke($createUsers)->count());
+        $this->assertInstanceOf(Permission::class, $admin->revoke($createUsers));
     }
 
     public function test_revoke_multiple_permissions()
