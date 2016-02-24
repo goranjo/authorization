@@ -8,6 +8,18 @@ use Illuminate\Support\Collection;
 trait RolePermissionsTrait
 {
     /**
+     * A role may have many users.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        $model = config('authorization.user');
+
+        return $this->belongsToMany($model);
+    }
+
+    /**
      * A role may be given various permissions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
