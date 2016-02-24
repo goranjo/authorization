@@ -16,7 +16,7 @@ that you can utilize native laravel policies and methods for authorization.
 Insert Authorization in your `composer.json` file:
 
 ```json
-"stevebauman/authorization": "1.0.*"
+"stevebauman/authorization": "1.3.*"
 ```
 
 Then run `composer update`.
@@ -146,6 +146,29 @@ Perform authorization like so:
 ```php
 if (auth()->user()->hasPermission('users.create')) {
     
+}
+```
+
+You can also create user specific permissions:
+
+```php
+$createUsers = new Permission();
+
+$createUsers->name = 'users.create';
+$createUsers->label = 'Create Users';
+
+$createUsers->save();
+
+$user->permissions()->save($createUsers);
+
+// Using the permissions name.
+if ($user->hasPermission('users.create')) {
+    //
+}
+
+// Using the permissions model.
+if ($user->hasPermission($createUsers)) {
+    //
 }
 ```
 
