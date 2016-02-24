@@ -582,4 +582,21 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($user->hasAnyRoles([$admin, $member, 'non-existent']));
         $this->assertTrue($user->hasAnyRoles([$admin, $member, $guest]));
     }
+
+    public function test_user_specific_permissions()
+    {
+        $user = $this->createUser([
+            'name' => 'John Doe',
+        ]);
+
+        $editUser = $this->createPermission([
+            'name' => 'users.edit.1',
+            'label' => 'Edit Specific User',
+        ]);
+
+        $user->permissions()->save($editUser);
+
+        $this->assertTrue($user->hasPermission('users.edit.1'));
+        $this->assertTrue($user->hasPermission($editUser));
+    }
 }

@@ -46,10 +46,29 @@ class CreateAuthorizationTables extends Migration
             $table->primary(['permission_id', 'role_id']);
         });
 
+        // The specific user permissions table.
+        Schema::create('permission_user', function (Blueprint $table) {
+            $table->integer('permission_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+
+            $table->foreign('permission_id')
+                ->references('id')
+                ->on('permissions')
+                ->onDelete('cascade');
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+
+            $table->primary(['permission_id', 'user_id']);
+        });
+
         // The role user pivot table.
         Schema::create('role_user', function (Blueprint $table) {
             $table->integer('role_id')->unsigned();
             $table->integer('user_id')->unsigned();
+
             $table->foreign('role_id')
                 ->references('id')
                 ->on('roles')

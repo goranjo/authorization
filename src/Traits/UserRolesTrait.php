@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait UserRolesTrait
 {
-    use HasRolesTrait;
+    use HasRolesTrait, HasPermissionsTrait;
 
     /**
      * Assign the given role to the user.
@@ -117,6 +117,10 @@ trait UserRolesTrait
             $model = config('authorization.permission');
 
             $permission = (new $model)->whereName($permission)->first();
+        }
+
+        if ($this->permissions->contains($permission)) {
+            return true;
         }
 
         if ($permission instanceof Model) {
