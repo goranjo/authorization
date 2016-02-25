@@ -341,7 +341,7 @@ public function edit($id)
 {
     $user = $this->user->findOrFail($id);
 
-    // The user must have permission to edit this specific user.
+    // The current user must have permission to edit this specific user.
     $this->authorize("users.edit.$user->id");
     
     return view('users.edit', compact('user'));
