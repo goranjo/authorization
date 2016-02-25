@@ -27,7 +27,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         // Set the configuration and migrations to publishable.
         $this->publishes([
             $migrations => database_path('migrations'),
-            $config => config_path('authorization.php'),
+            $config     => config_path('authorization.php'),
         ], $tag);
 
         // Merge the configuration.
@@ -72,7 +72,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         $model = config('authorization.permission');
 
         if (class_exists($model)) {
-            return new $model;
+            return new $model();
         }
 
         return false;

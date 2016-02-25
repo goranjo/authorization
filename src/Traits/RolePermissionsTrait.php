@@ -98,7 +98,7 @@ trait RolePermissionsTrait
      *
      * Returns the granted permission(s).
      *
-     * @param  Model|array $permissions
+     * @param Model|array $permissions
      *
      * @return Model|Collection
      */
@@ -126,7 +126,7 @@ trait RolePermissionsTrait
      *
      * Returns a collection of revoked permissions.
      *
-     * @param  Model|array $permissions
+     * @param Model|array $permissions
      *
      * @return Model|Collection
      */
@@ -158,6 +158,4 @@ trait RolePermissionsTrait
     {
         return $this->permissions()->detach();
     }
-
-
 }

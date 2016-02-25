@@ -2,8 +2,8 @@
 
 namespace Stevebauman\Authorization\Traits;
 
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait UserRolesTrait
 {
@@ -116,7 +116,7 @@ trait UserRolesTrait
             // If we weren't given a permission model, we'll try to find it by name.
             $model = config('authorization.permission');
 
-            $permission = (new $model)->whereName($permission)->first();
+            $permission = (new $model())->whereName($permission)->first();
         }
 
         if ($this->permissions->contains($permission)) {
@@ -185,7 +185,7 @@ trait UserRolesTrait
      */
     public function doesNotHavePermission($permission)
     {
-        return ! $this->hasPermission($permission);
+        return !$this->hasPermission($permission);
     }
 
     /**
@@ -198,7 +198,7 @@ trait UserRolesTrait
      */
     public function doesNotHavePermissions($permissions)
     {
-        return ! $this->hasPermissions($permissions);
+        return !$this->hasPermissions($permissions);
     }
 
     /**
@@ -211,6 +211,6 @@ trait UserRolesTrait
      */
     public function doesNotHaveAnyPermissions($permissions)
     {
-        return ! $this->hasAnyPermissions($permissions);
+        return !$this->hasAnyPermissions($permissions);
     }
 }
