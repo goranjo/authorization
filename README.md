@@ -318,3 +318,30 @@ Route::get('users', [
     'middleware' => 'role:administrator,member', // Users must be an administrator **and** a member to access this route.
 ]);
 ```
+
+To create permissions for a specific model, use the models key for a unique permission name. For example:
+
+```php
+$user = User::find(1);
+
+$permission = new Permission();
+
+$permission->name = "users.edit.$user->id";
+$permission->label = "Edit User: $user->name";
+
+$permission->save();
+```
+
+Then validate it when editing the specific model:
+
+```php
+public function edit($id)
+{
+    $user = $this->user->findOrFail($id);
+
+    // The user must have permission to edit this specific user.
+    $this->authorize("users.edit.$user->id");
+    
+    return view('users.edit', compact('user'));
+}
+```
