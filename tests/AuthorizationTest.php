@@ -2,7 +2,6 @@
 
 namespace Stevebauman\Authorization\Tests;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Stevebauman\Authorization\Tests\Stubs\Permission;
 use Stevebauman\Authorization\Tests\Stubs\Role;
@@ -49,7 +48,7 @@ class AuthorizationTest extends TestCase
     public function test_assign_role()
     {
         $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
@@ -65,12 +64,12 @@ class AuthorizationTest extends TestCase
     public function test_assign_multiple_roles()
     {
         $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $this->createRole([
-            'name' => 'member',
+            'name'  => 'member',
             'label' => 'Member',
         ]);
 
@@ -87,12 +86,12 @@ class AuthorizationTest extends TestCase
     public function test_assign_roles_with_model()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $member = $this->createRole([
-            'name' => 'member',
+            'name'  => 'member',
             'label' => 'Member',
         ]);
 
@@ -109,7 +108,7 @@ class AuthorizationTest extends TestCase
     public function test_has_role()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
@@ -131,14 +130,14 @@ class AuthorizationTest extends TestCase
         ]);
 
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $user->assignRole($admin);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
@@ -153,19 +152,19 @@ class AuthorizationTest extends TestCase
         ]);
 
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $user->assignRole($admin);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -184,19 +183,19 @@ class AuthorizationTest extends TestCase
         ]);
 
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $user->assignRole($admin);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -210,14 +209,14 @@ class AuthorizationTest extends TestCase
         ]);
 
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $user->assignRole($admin);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
@@ -233,19 +232,19 @@ class AuthorizationTest extends TestCase
         ]);
 
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $user->assignRole($admin);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -261,19 +260,19 @@ class AuthorizationTest extends TestCase
         ]);
 
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $user->assignRole($admin);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -285,12 +284,12 @@ class AuthorizationTest extends TestCase
     public function test_has_permission()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $permission = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
@@ -310,17 +309,17 @@ class AuthorizationTest extends TestCase
     public function test_has_multiple_permissions()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -338,12 +337,12 @@ class AuthorizationTest extends TestCase
     public function test_does_not_have_permission()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
@@ -360,17 +359,17 @@ class AuthorizationTest extends TestCase
     public function test_does_not_have_permission_multiple()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -388,22 +387,22 @@ class AuthorizationTest extends TestCase
     public function test_has_any_permissions()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
         $nonGrantedPermission = $this->createPermission([
-            'name' => 'other',
+            'name'  => 'other',
             'label' => 'Other Permission',
         ]);
 
@@ -422,17 +421,17 @@ class AuthorizationTest extends TestCase
     public function test_role_has_permission()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
@@ -447,22 +446,22 @@ class AuthorizationTest extends TestCase
     public function test_role_has_permissions()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
         $deleteUsers = $this->createPermission([
-            'name' => 'users.destroy',
+            'name'  => 'users.destroy',
             'label' => 'Delete Users',
         ]);
 
@@ -475,22 +474,22 @@ class AuthorizationTest extends TestCase
     public function test_role_has_any_permissions()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $createUsers = $this->createPermission([
-            'name' => 'users.create',
+            'name'  => 'users.create',
             'label' => 'Create Users',
         ]);
 
         $editUsers = $this->createPermission([
-            'name' => 'users.edit',
+            'name'  => 'users.edit',
             'label' => 'Edit Users',
         ]);
 
         $deleteUsers = $this->createPermission([
-            'name' => 'users.destroy',
+            'name'  => 'users.destroy',
             'label' => 'Delete Users',
         ]);
 
@@ -503,12 +502,12 @@ class AuthorizationTest extends TestCase
     public function test_user_has_role()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $member = $this->createRole([
-            'name' => 'member',
+            'name'  => 'member',
             'label' => 'Member',
         ]);
 
@@ -527,17 +526,17 @@ class AuthorizationTest extends TestCase
     public function test_user_has_roles()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $member = $this->createRole([
-            'name' => 'member',
+            'name'  => 'member',
             'label' => 'Member',
         ]);
 
         $guest = $this->createRole([
-            'name' => 'guest',
+            'name'  => 'guest',
             'label' => 'Guest',
         ]);
 
@@ -557,17 +556,17 @@ class AuthorizationTest extends TestCase
     public function test_user_has_any_roles()
     {
         $admin = $this->createRole([
-            'name' => 'administrator',
+            'name'  => 'administrator',
             'label' => 'Admin',
         ]);
 
         $member = $this->createRole([
-            'name' => 'member',
+            'name'  => 'member',
             'label' => 'Member',
         ]);
 
         $guest = $this->createRole([
-            'name' => 'guest',
+            'name'  => 'guest',
             'label' => 'Guest',
         ]);
 
@@ -590,7 +589,7 @@ class AuthorizationTest extends TestCase
         ]);
 
         $editUser = $this->createPermission([
-            'name' => 'users.edit.1',
+            'name'  => 'users.edit.1',
             'label' => 'Edit Specific User',
         ]);
 
