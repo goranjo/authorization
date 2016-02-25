@@ -319,6 +319,8 @@ Route::get('users', [
 ]);
 ```
 
+### Model Specific Permissions
+
 To create permissions for a specific model, use the models key for a unique permission name. For example:
 
 ```php
