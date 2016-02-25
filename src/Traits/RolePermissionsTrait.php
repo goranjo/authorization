@@ -8,6 +8,16 @@ use Illuminate\Support\Collection;
 trait RolePermissionsTrait
 {
     /**
+     * Returns the administrators name.
+     *
+     * @return string
+     */
+    public static function getAdministratorName()
+    {
+        return 'administrator';
+    }
+
+    /**
      * A role may have many users.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -29,6 +39,16 @@ trait RolePermissionsTrait
         $model = config('authorization.permission');
 
         return $this->belongsToMany($model);
+    }
+
+    /**
+     * Returns true / false if the current role is an administrator.
+     *
+     * @return bool
+     */
+    public function isAdministrator()
+    {
+        return $this->name === self::getAdministratorName();
     }
 
     /**
