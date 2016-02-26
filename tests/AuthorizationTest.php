@@ -598,4 +598,38 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($user->hasPermission('users.edit.1'));
         $this->assertTrue($user->hasPermission($editUser));
     }
+
+    public function test_granting_same_permissions()
+    {
+        $admin = $this->createRole([
+            'name'  => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $editUser = $this->createPermission([
+            'name'  => 'users.edit.1',
+            'label' => 'Edit Specific User',
+        ]);
+
+        $this->assertInstanceOf(Permission::class, $admin->grant($editUser));
+        $this->assertInstanceOf(Permission::class, $admin->grant($editUser));
+    }
+
+    public function test_revoking_same_permissions()
+    {
+        $admin = $this->createRole([
+            'name'  => 'administrator',
+            'label' => 'Admin',
+        ]);
+
+        $editUser = $this->createPermission([
+            'name'  => 'users.edit.1',
+            'label' => 'Edit Specific User',
+        ]);
+
+        $admin->grant($editUser);
+
+        $this->assertInstanceOf(Permission::class, $admin->revoke($editUser));
+        $this->assertInstanceOf(Permission::class, $admin->revoke($editUser));
+    }
 }

@@ -125,6 +125,11 @@ trait RolePermissionsTrait
     public function grant($permissions)
     {
         if ($permissions instanceof Model) {
+            // Verify if the role already has the permission.
+            if ($this->hasPermission($permissions->name)) {
+                return $permissions;
+            }
+
             if ($this->permissions()->save($permissions) instanceof Model) {
                 return $permissions;
             }
@@ -153,6 +158,10 @@ trait RolePermissionsTrait
     public function revoke($permissions)
     {
         if ($permissions instanceof Model) {
+            if (!$this->hasPermission($permissions->name)) {
+                return $permissions;
+            }
+
             if ($this->permissions()->detach($permissions) === 1) {
                 return $permissions;
             }
