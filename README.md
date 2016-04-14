@@ -133,18 +133,28 @@ $administrator->label = 'Admin';
 $administrator->save();
 
 $administrator->grant($createUsers);
+
+// Or use regular relationship methods
+
+$administrator->permissions()->save($createUsers);
 ```
 
 Now assign the role to the user:
 
 ```php
-auth()->user()->assignRole($administrator);
+$user = User::find(1);
+
+$user->assignRole($administrator);
+
+// Or use regular relationship methods
+
+$user->roles()->save($administrator);
 ```
 
 Perform authorization like so:
 
 ```php
-if (auth()->user()->hasPermission('users.create')) {
+if (Auth::user()->hasPermission('users.create')) {
     
 }
 ```
@@ -194,7 +204,7 @@ public function index()
 Or by using Laravel's native `can` method on the user:
 
 ```php
-if (auth()->user()->can('users.index')) {
+if (Auth::user()->can('users.index')) {
     // This user can access the index.
 }
 ```
@@ -211,7 +221,7 @@ Or by using Laravel's native `@can` directive in your views:
 Checking for multiple permissions:
 
 ```php
-if (auth()->user()->hasPermissions(['users.create', 'users.edit'])) {
+if (Auth::user()->hasPermissions(['users.create', 'users.edit'])) {
     // This user has both creation and edit rights.
 } else {
     // It looks like the user doesn't have one of the specified permissions.
@@ -221,7 +231,7 @@ if (auth()->user()->hasPermissions(['users.create', 'users.edit'])) {
 Checking if the user has any permissions:
 
 ```php
-if (auth()->user()->hasAnyPermissions(['users.create', 'users.edit', 'users.destroy'])) {
+if (Auth::user()->hasAnyPermissions(['users.create', 'users.edit', 'users.destroy'])) {
     // This user either has create, edit or destroy permissions.
 } else {
     // It looks like the user doesn't have any of the specified permissions.
@@ -231,7 +241,7 @@ if (auth()->user()->hasAnyPermissions(['users.create', 'users.edit', 'users.dest
 Checking if the user has a role:
 
 ```php
-if (auth()->user()->hasRole('administrator')) {
+if (Auth::user()->hasRole('administrator')) {
     // This user is an administrator.
 } else {
     // It looks like the user isn't an administrator.
@@ -241,7 +251,7 @@ if (auth()->user()->hasRole('administrator')) {
 Checking if the user has specified roles:
 
 ```php
-if (auth()->user()->hasRoles(['administrator', 'member'])) {
+if (Auth::user()->hasRoles(['administrator', 'member'])) {
     // This user is an administrator and a member.
 } else {
     // It looks like the user isn't an administrator or member.
@@ -251,7 +261,7 @@ if (auth()->user()->hasRoles(['administrator', 'member'])) {
 Checking if the user has any specified roles:
 
 ```php
-if (auth()->user()->hasAnyRoles(['administrator', 'member', 'guest'])) {
+if (Auth::user()->hasAnyRoles(['administrator', 'member', 'guest'])) {
     // This user is either an administrator, member or guest.
 } else {
     // It looks like the user doesn't have any of these roles.
