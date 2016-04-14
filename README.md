@@ -132,6 +132,8 @@ $administrator->label = 'Admin';
 
 $administrator->save();
 
+// Granting the role the $createUsers permission.
+
 $administrator->grant($createUsers);
 
 // Or use regular relationship methods
@@ -144,7 +146,13 @@ Now assign the role to the user:
 ```php
 $user = User::find(1);
 
+// Using the role model
+
 $user->assignRole($administrator);
+
+// Using the role name
+
+$user->assignRole('administrator');
 
 // Or use regular relationship methods
 
