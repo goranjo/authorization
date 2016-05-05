@@ -10,7 +10,7 @@
 
 This package has been moved to https://github.com/larapacks/authorization.
 
-This GitHub repository will be deleted in 3 months from this commit (though composer availability will still exist and will not be removed).
+This GitHub repository will be deleted in 3 months from this commit (though composer availability will still exist and **will not** be removed).
 
 ## Description
 
