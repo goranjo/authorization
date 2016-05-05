@@ -6,6 +6,14 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/stevebauman/authorization.svg?style=flat-square)](https://packagist.org/packages/stevebauman/authorization)
 [![License](https://img.shields.io/packagist/l/stevebauman/authorization.svg?style=flat-square)](https://packagist.org/packages/stevebauman/authorization)
 
+## Attention
+
+This package has been moved to https://github.com/larapacks/authorization.
+
+This GitHub repository will be deleted in 3 months from this commit (though composer availability will still exist and will not be removed).
+
+## Description
+
 An easy, native role / permission management system for Laravel.
 
 Authorization automatically adds your database permissions and roles to the `Illuminate\Auth\Access\Gate`, this means
